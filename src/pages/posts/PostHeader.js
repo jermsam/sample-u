@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import faker from 'faker'
 import PostMenu from './PostMenu'
-import {imghost} from '../../feathers'
+import {bucket} from '../../feathers'
 
 function PostHeader({post,authUser}){
-  const src = (post.user.avatar) ? `${imghost}/${post.user.avatar}`:faker.internet.avatar();
+  const src = (post.user.avatar) ? `${bucket}/${post.user.avatar}`:faker.internet.avatar();
  return (
 <Grid columns={2} verticalAlign='middle'>
 <Grid.Column width={14}>

@@ -4,7 +4,7 @@ import Image from 'react-graceful-image'
 import PropTypes from 'prop-types'
 import faker from 'faker'
 import moment from 'moment'
-import {client,imghost} from '../feathers'
+import {app,bucket} from '../feathers'
 import EditUserAvatar from './EditUserAvatar'
 
 class UserDetails extends Component{
@@ -24,7 +24,7 @@ class UserDetails extends Component{
   componentDidMount(){
     const {authUser}=this.props
     this.setState({user:authUser,id:authUser.avatar})
-    client.service('users').on('patched',this.fetchUser)
+    app.service('users').on('patched',this.fetchUser)
 }
 
 
@@ -38,14 +38,14 @@ onChange = (e, { name,value }) => this.setState((prevState)=>({
 
  fetchUser = async ()=>{
    const {authUser:{id}}=this.props
-   const user= await client.service('users').get(id)
+   const user= await app.service('users').get(id)
   // console.log(user)
   this.setState({user}) 
  }
 
   handleSaveChanges = () => {
     const {user}=this.state
-    client.service('users').patch(user.id,{...user}).then(
+    app.service('users').patch(user.id,{...user}).then(
         ()=>this.setState({ 
            user,
             open4Edit:false,
@@ -57,7 +57,7 @@ onChange = (e, { name,value }) => this.setState((prevState)=>({
 
     handleAddedFile = file =>{
       // We want to upload
-    const uploadService = client.service('uploads'); 
+    const uploadService = app.service('uploads'); 
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () =>uploadService.on('created',
@@ -74,7 +74,7 @@ onChange = (e, { name,value }) => this.setState((prevState)=>({
     }
   
     handleRemovedFile = (file) =>{
-     const uploadService = client.service('uploads'); 
+     const uploadService = app.service('uploads'); 
       const {id}= this.state 
       uploadService.remove(id).then(
         ()=>this.setState((prevState)=>({
@@ -102,7 +102,7 @@ onChange = (e, { name,value }) => this.setState((prevState)=>({
 
   render(){
     const {open4Edit,user}=this.state
-    const src = (user&&user.avatar) ? `${imghost}/${user.avatar}`:faker.internet.avatar();
+    const src = (user&&user.avatar) ? `${bucket}/${user.avatar}`:faker.internet.avatar();
     // const {authUser:{avatar,firstname,lastname,email,createdAt}}=this.props
      
       return(

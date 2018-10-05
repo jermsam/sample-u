@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Image from 'react-graceful-image'
 import moment from 'moment'
 import faker from 'faker'
-import {client,imghost} from '../../../../feathers'
+import {app,bucket} from '../../../../feathers'
 import EditReplyField from './EditReplyField'
 
 export default class ReplyWidget extends Component{
@@ -28,7 +28,7 @@ export default class ReplyWidget extends Component{
 
        handleSaveChanges = () => {
         const {data}=this.state
-        client.service('replies').patch(data.id,{...data}).then(
+        app.service('replies').patch(data.id,{...data}).then(
             ()=>this.setState({ 
                 data,
                 id:'',
@@ -41,7 +41,7 @@ export default class ReplyWidget extends Component{
     handleLike =()=>{
         const {data:{id,likes}} =this.state
        console.log(id," : ",likes);
-       client.service('replies').patch(id,{likes:likes+1});
+       app.service('replies').patch(id,{likes:likes+1});
      }
 
      handleEdit = () => this.setState({ open4Edit: true })
@@ -50,7 +50,7 @@ export default class ReplyWidget extends Component{
 
      handleConfimedDelete=()=>{
         const {data:{id}} =this.state
-        client.service('replies').remove(id).then(
+        app.service('replies').remove(id).then(
             ()=>this.setState({ open4Delete: false }) 
          )
     }
@@ -59,7 +59,7 @@ export default class ReplyWidget extends Component{
 
     handleAddedFile = file =>{
         // We want to upload
-      const uploadService = client.service('uploads'); 
+      const uploadService = app.service('uploads'); 
       const reader = new window.FileReader()
       reader.readAsDataURL(file)
       reader.onload = () =>uploadService.on('created',
@@ -76,7 +76,7 @@ export default class ReplyWidget extends Component{
       }
       
       handleRemovedFile = (file) =>{
-       const uploadService = client.service('uploads'); 
+       const uploadService = app.service('uploads'); 
         const {id}= this.state 
         uploadService.remove(id).then(
           ()=>this.setState((prevState)=>({
@@ -105,7 +105,7 @@ export default class ReplyWidget extends Component{
     render(){
         const {data,open4Delete,open4Edit,}=this.state
         const {reply:{createdAt,message,likes,image,user:{id,firstname,lastname,avatar}},authUser} =this.props 
-        const src = (avatar) ? `${imghost}/${avatar}`:faker.internet.avatar();
+        const src = (avatar) ? `${bucket}/${avatar}`:faker.internet.avatar();
         return <div>
         
             <Comment style={{backgroundColor:'#f2f2f2'}}>
@@ -118,7 +118,7 @@ export default class ReplyWidget extends Component{
                     <Comment.Text>{message}</Comment.Text>
                     <Container textAlign='center'>
                     {image &&
-                    <Image src={`${imghost}/${image}`} 
+                    <Image src={`${bucket}/${image}`} 
                     width="100%"
                     height="auto"
                     style={{padding: '10px'}}

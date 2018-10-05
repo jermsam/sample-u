@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Image from 'react-graceful-image'
 import moment from 'moment'
 import faker from 'faker'
-import {client,imghost} from '../../../feathers'
+import {app,bucket} from '../../../feathers'
 import EditCommentField from './EditCommentField'
 import ReplyField from './replies/ReplyField'
 import ReplyWidget from './replies/ReplyWidget'
@@ -23,13 +23,13 @@ export default class CommentWidget extends Component{
         const {id}=comment
         this.fetchFromRemote(id);
 
-  client.service('replies').on('created',()=>this.fetchFromRemote(id));
-  client.service('replies').on('patched',()=>this.fetchFromRemote(id));
-  client.service('replies').on('removed',()=>this.fetchFromRemote(id));
-  client.service('users').on('patched',()=>this.fetchFromRemote(id))
+  app.service('replies').on('created',()=>this.fetchFromRemote(id));
+  app.service('replies').on('patched',()=>this.fetchFromRemote(id));
+  app.service('replies').on('removed',()=>this.fetchFromRemote(id));
+  app.service('users').on('patched',()=>this.fetchFromRemote(id))
     }
 
-    fetchFromRemote =(id)=>client.service('replies').find({
+    fetchFromRemote =(id)=>app.service('replies').find({
         query: {
             commentId:id,
               $sort: {
@@ -53,7 +53,7 @@ export default class CommentWidget extends Component{
 
        handleSaveChanges = () => {
         const {data}=this.state
-        client.service('comments').patch(data.id,{...data}).then(
+        app.service('comments').patch(data.id,{...data}).then(
             ()=>this.setState({ 
                 data,
                 id:'',
@@ -66,7 +66,7 @@ export default class CommentWidget extends Component{
     handleLike =()=>{
         const {data:{id,likes}} =this.state
        console.log(id," : ",likes);
-       client.service('comments').patch(id,{likes:likes+1});
+       app.service('comments').patch(id,{likes:likes+1});
      }
 
      handleEdit = () => this.setState({ open4Edit: true })
@@ -81,7 +81,7 @@ export default class CommentWidget extends Component{
 
      handleConfimedDelete=()=>{
         const {data:{id}} =this.state
-        client.service('comments').remove(id).then(
+        app.service('comments').remove(id).then(
             ()=>this.setState({ open4Delete: false }) 
          )
     }
@@ -90,7 +90,7 @@ export default class CommentWidget extends Component{
 
     handleAddedFile = file =>{
         // We want to upload
-      const uploadService = client.service('uploads'); 
+      const uploadService = app.service('uploads'); 
       const reader = new window.FileReader()
       reader.readAsDataURL(file)
       reader.onload = () =>uploadService.on('created',
@@ -107,7 +107,7 @@ export default class CommentWidget extends Component{
       }
       
       handleRemovedFile = (file) =>{
-       const uploadService = client.service('uploads'); 
+       const uploadService = app.service('uploads'); 
         const {id}= this.state 
         uploadService.remove(id).then(
           ()=>this.setState((prevState)=>({
@@ -137,7 +137,7 @@ export default class CommentWidget extends Component{
     render(){
         const {data,open4Delete,open4Edit,open4Reply,replies}=this.state
         const {comment:{createdAt,message,likes,image,user:{id,firstname,lastname,avatar}},authUser} =this.props 
-        const src = (avatar) ? `${imghost}/${avatar}`:faker.internet.avatar();
+        const src = (avatar) ? `${bucket}/${avatar}`:faker.internet.avatar();
         return <div>
         <Comment>
               <Comment.Avatar src={src} />
@@ -149,7 +149,7 @@ export default class CommentWidget extends Component{
                 <Comment.Text>{message}</Comment.Text>
                 <Container textAlign='center'>
                     {image &&
-                    <Image src={`${imghost}/${image}`} 
+                    <Image src={`${bucket}/${image}`} 
                     width="100%"
                     height="auto"
                     style={{padding: '10px'}}

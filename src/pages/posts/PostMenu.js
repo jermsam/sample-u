@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import {Label,Dropdown,Confirm} from 'semantic-ui-react'
 import PropTypes from 'prop-types'
-import {client} from '../../feathers'
+import {app} from '../../feathers'
 import EditPostField from './EditPostField'
 import CommentField from './comments/CommentField'
 
@@ -34,7 +34,7 @@ export default class PostMenu extends Component{
 
     handleSaveChanges = () => {
     const {post}=this.state
-    client.service('posts').patch(post.id,{...post}).then(
+    app.service('posts').patch(post.id,{...post}).then(
         ()=>this.setState({ 
             post,
             id:'',
@@ -46,7 +46,7 @@ export default class PostMenu extends Component{
 
     handleLike =()=>{
        const {post:{id,likes}} =this.state
-       client.service('posts').patch(id,{likes:likes+1})
+       app.service('posts').patch(id,{likes:likes+1})
     }
 
     handleEdit = () => this.setState({ open4Edit: true })
@@ -60,7 +60,7 @@ export default class PostMenu extends Component{
 
     handleAddedFile = file =>{
         // We want to upload
-      const uploadService = client.service('uploads'); 
+      const uploadService = app.service('uploads'); 
       const reader = new window.FileReader()
       reader.readAsDataURL(file)
       reader.onload = () =>uploadService.on('created',
@@ -77,7 +77,7 @@ export default class PostMenu extends Component{
       }
     
       handleRemovedFile = (file) =>{
-       const uploadService = client.service('uploads'); 
+       const uploadService = app.service('uploads'); 
         const {id}= this.state 
         uploadService.remove(id).then(
           ()=>this.setState((prevState)=>({
@@ -109,7 +109,7 @@ export default class PostMenu extends Component{
 
     handleConfimedDelete=()=>{
         const {post:{id}} =this.state
-        client.service('posts').remove(id).then(
+        app.service('posts').remove(id).then(
             ()=>this.setState({ open4Delete: false }) 
          )
     }

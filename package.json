@@ -2,6 +2,11 @@
   "name": "sample-u",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "10.11.0",
+    "yarn": "1.10.1",
+    "npm": "6.4.1"
+  },
   "dependencies": {
     "@feathersjs/client": "^3.6.0",
     "dropzone": "^5.5.1",

@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {Container, Confirm,Form } from 'semantic-ui-react'
 import DropzoneComponent from 'react-dropzone-component'
 import PropTypes from 'prop-types'
-import {imghost} from '../feathers'
+import {bucket} from '../feathers'
 
 const componentConfig = {
   iconFiletypes: ['.jpg', '.png', '.gif'],
@@ -40,7 +40,7 @@ export default class EditUserAvatar extends Component{
         // Call the default addedfile event handler
         dropzone.emit("addedfile", mockFile);
         // And optionally show the thumbnail of the file:
-        dropzone.emit("thumbnail", mockFile, `${imghost}/${avatar}`);
+        dropzone.emit("thumbnail", mockFile, `${bucket}/${avatar}`);
         // Make sure that there is no progress bar, etc...
         dropzone.emit("complete", mockFile);
         } 

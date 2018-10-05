@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {Container, Form, TextArea,Confirm } from 'semantic-ui-react'
 import DropzoneComponent from 'react-dropzone-component'
 import PropTypes from 'prop-types'
-import {client} from '../../../../feathers'
+import {app} from '../../../../feathers'
 
 const componentConfig = {
   iconFiletypes: ['.jpg', '.png', '.gif'],
@@ -86,7 +86,7 @@ handleSaveChanges=()=>{
   const {authUser}=this.props
   const{reply}=this.state
   const {comment:{id}}=this.props
- client.service('replies').create({userId:authUser.id,commentId:id,...reply}).then(
+ app.service('replies').create({userId:authUser.id,commentId:id,...reply}).then(
    ()=>this.handleClosereply()
  )
 } 
@@ -94,7 +94,7 @@ handleSaveChanges=()=>{
 
  handleAddedFile = file =>{
   // We want to upload
-const uploadService = client.service('uploads'); 
+const uploadService = app.service('uploads'); 
 const reader = new window.FileReader()
 reader.readAsDataURL(file)
 reader.onload = () =>uploadService.on('created',
@@ -111,7 +111,7 @@ reader.onerror = (error) =>  console.error('Base 64 Error: ', error)
 }
 
 handleRemovedFile = (file) =>{
- const uploadService = client.service('uploads'); 
+ const uploadService = app.service('uploads'); 
   const {id}= this.state 
   uploadService.remove(id).then(
     ()=>this.setState((prevState)=>({

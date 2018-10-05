@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {Container,Segment, Form, TextArea,Button,Confirm } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import DropzoneComponent from 'react-dropzone-component'
-import {client} from '../../feathers'
+import {app} from '../../feathers'
 
 const componentConfig = {
   iconFiletypes: ['.jpg', '.png', '.gif'],
@@ -47,7 +47,7 @@ class PostField extends Component{
     const {post}=this.state
     const {authUser:{id}}=this.props
     if (post)
-    client.service('posts').create({userId:id,...post}).then(
+    app.service('posts').create({userId:id,...post}).then(
       ()=>this.setState({
         showUploadDropzone:false,
         myDropzone:null,
@@ -105,7 +105,7 @@ myDropzone.addFile(file);
 
   handleAddedFile = file =>{
     // We want to upload
-  const uploadService = client.service('uploads'); 
+  const uploadService = app.service('uploads'); 
   const reader = new window.FileReader()
   reader.readAsDataURL(file)
   reader.onload = () =>uploadService.on('created',
@@ -122,7 +122,7 @@ myDropzone.addFile(file);
   }
 
   handleRemovedFile = (file) =>{
-    const uploadService = client.service('uploads');
+    const uploadService = app.service('uploads');
     const {id}= this.state 
     uploadService.remove(id).then(
       ()=>this.setState((prevState)=>({

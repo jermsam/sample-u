@@ -2,7 +2,7 @@ import React from 'react'
 import {Container,Divider,Icon,Statistic} from 'semantic-ui-react'
 import Image from 'react-graceful-image'
 import PropTypes from 'prop-types'
-import {imghost} from '../../feathers'
+import {bucket} from '../../feathers'
 
 
 const PostBody =({post:{message,image,likes,shares,}})=>
@@ -13,7 +13,7 @@ const PostBody =({post:{message,image,likes,shares,}})=>
 
     <Container textAlign='center'>
     {image &&
-    <Image src={`${imghost}/${image}`} 
+    <Image src={`${bucket}/${image}`} 
     width="100%"
     height="auto"
     style={{padding: '20px'}}

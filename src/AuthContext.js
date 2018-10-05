@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { client } from './feathers';
+import { app } from './feathers';
 
 const AuthContext = React.createContext();
 
@@ -11,7 +11,7 @@ class AuthProvider extends React.Component {
     const token = localStorage.getItem('feathers-jwt');
     console.log(token)
     if (token) {
-      client
+      app
         .authenticate()
         .then(({ accessToken }) => this.handleAuth(accessToken));
     }
@@ -19,9 +19,9 @@ class AuthProvider extends React.Component {
 
   handleAuth = async accessToken => {
     try {
-      const { userId } = await client.passport.verifyJWT(accessToken);
+      const { userId } = await app.passport.verifyJWT(accessToken);
 
-      const authUser = await client.service('users').get(userId);
+      const authUser = await app.service('users').get(userId);
       // console.log(authUser)
       this.setState({ authUser });
       return authUser;
@@ -30,7 +30,7 @@ class AuthProvider extends React.Component {
     }
   };
 
-  logout = () => client.logout().then(() => window.location.reload());
+  logout = () => app.logout().then(() => window.location.reload());
 
   render() {
     const { authUser } = this.state;

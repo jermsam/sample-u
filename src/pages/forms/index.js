@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {Menu,Grid,Container,Form,Button,Divider,Statistic,Icon,Header} from 'semantic-ui-react'
 import PropTypes from 'prop-types'
-import {client} from '../../feathers'
+import {app} from '../../feathers'
 
 const SignIn= ({data:{email,password},onChange,onSignin}) => (
       <Form>
@@ -73,12 +73,12 @@ const SignIn= ({data:{email,password},onChange,onSignin}) => (
   
       onSignup = () =>{
           const {data} =this.state
-          client.service('users').create(data)
+          app.service('users').create(data)
           .then(()=>this.doAuth(data))
           .then(()=>this.setState({data:INNITIAL_STATE}))
       }
 
-      doAuth= data=>client.authenticate({
+      doAuth= data=>app.authenticate({
           strategy:'local',
           ...data
         }).then(()=>window.location.reload())

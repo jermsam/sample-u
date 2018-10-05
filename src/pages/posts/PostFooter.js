@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {Comment,Header,} from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import CommentWidget from './comments/CommentWidget'
-import {client} from '../../feathers'
+import {app} from '../../feathers'
 
 
 
@@ -16,10 +16,10 @@ componentDidMount(){
     
     this.fetchFromRemote(id);
 
-  client.service('comments').on('created',()=>this.fetchFromRemote(id));
-  client.service('comments').on('patched',()=>this.fetchFromRemote(id));
-  client.service('comments').on('removed',()=>this.fetchFromRemote(id));
-  client.service('users').on('patched',()=>this.fetchFromRemote(id))
+  app.service('comments').on('created',()=>this.fetchFromRemote(id));
+  app.service('comments').on('patched',()=>this.fetchFromRemote(id));
+  app.service('comments').on('removed',()=>this.fetchFromRemote(id));
+  app.service('users').on('patched',()=>this.fetchFromRemote(id))
 }
 
     
@@ -28,7 +28,7 @@ componentWillUnmount() {
 }    
     
 
-fetchFromRemote =(id)=>client.service('comments').find({
+fetchFromRemote =(id)=>app.service('comments').find({
     query: {
         postId:id,
           $sort: {

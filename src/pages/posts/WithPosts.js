@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { client } from '../../feathers';
+import { app } from '../../feathers';
 // const image= require('./img/128.gif')
 
 class WithPosts extends Component {
@@ -10,14 +10,14 @@ class WithPosts extends Component {
 
   componentDidMount() {
     this.fetchFromRemote();
-    client.service('posts').on('created', () => this.fetchFromRemote());
-    client.service('posts').on('patched', () => this.fetchFromRemote());
-    client.service('posts').on('removed', () => this.fetchFromRemote());
-    client.service('users').on('patched', () => this.fetchFromRemote());
+    app.service('posts').on('created', () => this.fetchFromRemote());
+    app.service('posts').on('patched', () => this.fetchFromRemote());
+    app.service('posts').on('removed', () => this.fetchFromRemote());
+    app.service('users').on('patched', () => this.fetchFromRemote());
   }
 
   fetchFromRemote = () =>
-    client
+    app
       .service('posts')
       .find({
         query: {
